@@ -1,13 +1,20 @@
+import { config } from "@/config";
 import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
+import FacebookProvider from "next-auth/providers/facebook";
 
 export const authOptions = {
   // Configure one or more authentication providers
   providers: [
     GithubProvider({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
+      clientId: config.githubClientId,
+      clientSecret: config.githubClientSecret,
     }),
+    FacebookProvider({
+      clientId: config.facebookClientId,
+      clientSecret: config.facebookClientSecret,
+    }),
+
     // ...add more providers here
   ],
 };
