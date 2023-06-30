@@ -1,7 +1,9 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { createContext } from "react";
 import type { todos as Todo } from "@prisma/client";
+
 import { config } from "@/config";
+import { useSession } from "next-auth/react";
 interface DefaultAppContextType {
   todos: Todo[];
   updateData: (value: any) => void;
@@ -24,16 +26,19 @@ interface Props {
 }
 const AppProvider = ({ children }: Props) => {
   const [data, updateData] = useState(defaultAppContext);
+  const { data: session } = useSession();
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (session) {
+      fetchData();
+    }
+  }, [session]);
   const fetchData = async () => {
     updateData({ ...data, isLoading: true });
     const response = await fetch(`${config.apiBaseUrl}`);
     if (response.ok) {
       const responseJson = await response.json();
 
-      updateData({ ...data, ...responseJson, isLoading: false });
+      updateData({ ...data, isLoading: false });
     }
   };
 

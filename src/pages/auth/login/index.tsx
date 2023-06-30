@@ -1,18 +1,10 @@
 import { useSession, signIn, signOut } from "next-auth/react";
+import { useRouter } from "next/router";
 export default function Component() {
   const { data: session } = useSession();
+  const router = useRouter();
   if (session) {
-    return (
-      <div style={{ color: "white" }}>
-        Signed in as {session.user?.email} <br />
-        <button
-          onClick={() => signOut()}
-          style={{ backgroundColor: "white", color: "black" }}
-        >
-          Sign out
-        </button>
-      </div>
-    );
+    router.push("/");
   }
   return (
     <div style={{ color: "white" }}>

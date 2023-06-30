@@ -7,7 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model users {
+  id    Int     @id @default(autoincrement())
+  name  String
+  email String
+  image String
+  todos todos[]
+}
+
 model todos {
-  id   Int    @id @default(autoincrement())
-  name String
+  id       Int      @id @default(autoincrement())
+  title    String
+  note     String
+  date     DateTime
+  users_id Int
+  users    users    @relation(fields: [users_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
