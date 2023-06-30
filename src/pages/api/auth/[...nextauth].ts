@@ -1,7 +1,7 @@
 import { config } from "@/config";
 import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
-import FacebookProvider from "next-auth/providers/facebook";
+import DiscordProvider from "next-auth/providers/discord";
 
 export const authOptions = {
   // Configure one or more authentication providers
@@ -10,9 +10,9 @@ export const authOptions = {
       clientId: config.githubClientId,
       clientSecret: config.githubClientSecret,
     }),
-    FacebookProvider({
-      clientId: config.facebookClientId,
-      clientSecret: config.facebookClientSecret,
+    DiscordProvider({
+      clientId: config.discordClientId,
+      clientSecret: config.discordClientSecret,
     }),
 
     // ...add more providers here
