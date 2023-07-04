@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import TodoList from "@/components/TodoList";
 
 import { Box } from "@mui/material";
 import { useSession } from "next-auth/react";
@@ -8,15 +9,16 @@ import { useEffect } from "react";
 export default function Home() {
   const { data: session } = useSession();
   const router = useRouter();
-  console.log("session", session);
   useEffect(() => {
     if (!session) {
-      router.push("/auth/login");
+      router.push("/auth/signin");
     }
   });
   return (
     <Layout title="todo list app">
-      <Box></Box>
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+        <TodoList />
+      </Box>
     </Layout>
   );
 }

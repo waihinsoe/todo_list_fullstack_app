@@ -14,7 +14,6 @@ export const authOptions = {
       clientId: config.discordClientId,
       clientSecret: config.discordClientSecret,
     }),
-
     // ...add more providers here
   ],
 };

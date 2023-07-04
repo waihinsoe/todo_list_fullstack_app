@@ -7,6 +7,7 @@ interface Props {
 
 const NavBar = ({ title }: Props) => {
   const { data: session } = useSession();
+
   return (
     <Box
       sx={{
@@ -18,7 +19,11 @@ const NavBar = ({ title }: Props) => {
         boxShadow: 3,
       }}
     >
-      <Avatar alt="Cindy Baker" sx={{ bgcolor: "#001C30" }} src="" />
+      <Avatar
+        alt="Cindy Baker"
+        sx={{ bgcolor: "#001C30" }}
+        src={session?.user?.image || ""}
+      />
       <Typography
         variant="h5"
         sx={{ textTransform: "uppercase", color: "#001C30" }}
