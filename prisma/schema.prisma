@@ -22,4 +22,7 @@ model todos {
   date     DateTime
   users_id Int
   users    users    @relation(fields: [users_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
+  
