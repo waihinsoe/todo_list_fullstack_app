@@ -5,7 +5,7 @@ import type { todos as Todo, users as User } from "@prisma/client";
 import { config } from "@/config";
 import { useSession } from "next-auth/react";
 interface DefaultAppContextType {
-  user: User[];
+  user: User | null;
   todos: Todo[];
   updateData: (value: any) => void;
   fetchData: () => void;
@@ -13,7 +13,7 @@ interface DefaultAppContextType {
 }
 
 const defaultAppContext: DefaultAppContextType = {
-  user: [],
+  user: null,
   todos: [],
   updateData: () => {},
   fetchData: () => {},
