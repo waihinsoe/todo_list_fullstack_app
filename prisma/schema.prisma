@@ -18,8 +18,8 @@ model users {
 model todos {
   id       Int      @id @default(autoincrement())
   title    String
-  note     String
-  date     DateTime
+  note     String?
+  date     DateTime?
   users_id Int
   users    users    @relation(fields: [users_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   createdAt DateTime @default(now())

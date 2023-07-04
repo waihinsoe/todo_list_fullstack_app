@@ -20,7 +20,7 @@ export default async function handler(
       },
     });
     if (!userFromDB) {
-      await prisma.users.create({
+      const newUser = await prisma.users.create({
         data: {
           name,
           email,
@@ -28,7 +28,7 @@ export default async function handler(
         },
       });
 
-      return res.send(200);
+      return res.send({ user: newUser });
     } else {
       const userId = userFromDB.id;
       const todos = await prisma.todos.findMany({
@@ -37,8 +37,20 @@ export default async function handler(
         },
       });
 
-      return res.send({ todos });
+      return res.send({ user: userFromDB, todos });
     }
+  } else if (req.method === "POST") {
+    const { title, userId } = req.body;
+    const isVaid = title && userId;
+    if (!isVaid) return res.send(400);
+
+    await prisma.todos.create({
+      data: {
+        title,
+        users_id: Number(userId),
+      },
+    });
+    return res.send(200);
   } else {
     return res.send(405);
   }
