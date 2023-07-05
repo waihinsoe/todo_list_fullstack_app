@@ -34,10 +34,18 @@ export default async function handler(
       const todos = await prisma.todos.findMany({
         where: {
           users_id: userId,
+          is_archived: false,
         },
       });
 
-      return res.send({ user: userFromDB, todos });
+      const archivedTodos = await prisma.todos.findMany({
+        where: {
+          users_id: userId,
+          is_archived: true,
+        },
+      });
+
+      return res.send({ user: userFromDB, todos, archivedTodos });
     }
   } else if (req.method === "POST") {
     const { title, userId } = req.body;
@@ -48,6 +56,32 @@ export default async function handler(
       data: {
         title,
         users_id: Number(userId),
+      },
+    });
+    return res.send(200);
+  } else if (req.method === "PUT") {
+    const { userId, todoId, isArchived, isLineThrough } = req.body;
+    const isValid = userId && todoId;
+    if (!isValid) return res.send(400);
+
+    if (!isLineThrough) {
+      await prisma.todos.update({
+        data: {
+          is_lineThrough: isLineThrough,
+        },
+        where: {
+          id: Number(todoId),
+        },
+      });
+      return res.send(200);
+    }
+    await prisma.todos.update({
+      data: {
+        is_archived: isArchived,
+        is_lineThrough: isLineThrough,
+      },
+      where: {
+        id: Number(todoId),
       },
     });
     return res.send(200);

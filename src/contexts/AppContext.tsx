@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 interface DefaultAppContextType {
   user: User | null;
   todos: Todo[];
+  archivedTodos: Todo[];
   updateData: (value: any) => void;
   fetchData: () => void;
   isLoading: Boolean;
@@ -15,6 +16,7 @@ interface DefaultAppContextType {
 const defaultAppContext: DefaultAppContextType = {
   user: null,
   todos: [],
+  archivedTodos: [],
   updateData: () => {},
   fetchData: () => {},
   isLoading: true,
