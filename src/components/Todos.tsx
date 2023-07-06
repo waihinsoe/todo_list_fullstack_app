@@ -1,44 +1,27 @@
 import * as React from "react";
-import Accordion from "@mui/material/Accordion";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import Typography from "@mui/material/Typography";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
 import { Box, Checkbox, InputAdornment, TextField } from "@mui/material";
-import type { todos as Todo } from "@prisma/client";
 import AddIcon from "@mui/icons-material/Add";
 import { useContext, useState } from "react";
 import { config } from "@/config";
 import { AppContext } from "@/contexts/AppContext";
+import dayjs, { Dayjs } from "dayjs";
+import TodoItem from "./TodoItem";
 
 const Todos = () => {
   const { fetchData, user, todos } = useContext(AppContext);
   const [newTodoTitle, setNewTodoTitle] = useState("");
+
   const [expanded, setExpanded] = React.useState<number | false>(false);
 
-  const handleChange =
-    (panel: number) => (event: React.SyntheticEvent, isExpanded: boolean) => {
-      setExpanded(isExpanded ? panel : false);
-    };
+  const validTodos = todos.filter((item) => !item.is_done);
 
-  const handleRemove = async (
-    todoId: number,
-    isArchived: boolean,
-    isLineThrough: boolean
+  const handleChange = (
+    event: React.SyntheticEvent,
+    isExpanded: boolean,
+    panel: number
   ) => {
-    const userId = user?.id;
-    const isValid = userId && todoId;
-    if (!isValid) return alert("userId and todoId are required.");
-
-    const response = await fetch(`${config.apiBaseUrl}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId, todoId, isArchived, isLineThrough }),
-    });
-
-    if (response.ok) {
-      fetchData();
-    }
+    setExpanded(isExpanded ? panel : false);
   };
 
   const handleAddNewTodo = async () => {
@@ -59,52 +42,15 @@ const Todos = () => {
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-      {todos.length
-        ? todos.map((todo) => {
+      {validTodos.length
+        ? validTodos.map((todo) => {
             return (
-              <Accordion
+              <TodoItem
                 key={todo.id}
-                square
-                disableGutters
-                expanded={expanded === todo.id}
-                onChange={handleChange(todo.id)}
-              >
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1bh-content"
-                  id="panel1bh-header"
-                  sx={{ borderBottom: "1px solid " }}
-                >
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <Checkbox
-                      defaultChecked
-                      onClick={() =>
-                        handleRemove(
-                          todo.id,
-                          !todo.is_archived,
-                          !todo.is_lineThrough
-                        )
-                      }
-                      checked={todo.is_lineThrough ? true : false}
-                    />
-                    <Typography
-                      sx={{
-                        textDecoration: `${
-                          todo.is_lineThrough ? "line-through" : "none"
-                        }`,
-                      }}
-                    >
-                      {todo.title}
-                    </Typography>
-                  </Box>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Typography>
-                    Nulla . Phasellus sollicitudin nulla et quam mattis feugiat.
-                    Aliquam eget maximus est, id dignissim quam.
-                  </Typography>
-                </AccordionDetails>
-              </Accordion>
+                todo={todo}
+                expanded={expanded}
+                handleChange={handleChange}
+              />
             );
           })
         : ""}

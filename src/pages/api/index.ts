@@ -60,11 +60,12 @@ export default async function handler(
     });
     return res.send(200);
   } else if (req.method === "PUT") {
-    const { userId, todoId, isArchived, isLineThrough } = req.body;
+    const { userId, todoId, isDone, isLineThrough } = req.body;
     const isValid = userId && todoId;
     if (!isValid) return res.send(400);
 
     if (!isLineThrough) {
+      //if lineThrough is false , want to make undone this todo.
       await prisma.todos.update({
         data: {
           is_lineThrough: isLineThrough,
@@ -75,15 +76,28 @@ export default async function handler(
       });
       return res.send(200);
     }
+
+    //If lineThrough and isDone are true , want to make done this todo.
     await prisma.todos.update({
       data: {
-        is_archived: isArchived,
+        is_done: isDone,
         is_lineThrough: isLineThrough,
       },
       where: {
         id: Number(todoId),
       },
     });
+    return res.send(200);
+  } else if (req.method === "DELETE") {
+    const todoId = req.query.todoId as string;
+    if (!todoId) return res.send(405);
+
+    await prisma.todos.delete({
+      where: {
+        id: Number(todoId),
+      },
+    });
+
     return res.send(200);
   } else {
     return res.send(405);

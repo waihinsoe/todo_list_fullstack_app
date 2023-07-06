@@ -6,19 +6,20 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === "PUT") {
-    const archivedTodoIds = req.body.archivedTodoIds as number[];
-    if (!archivedTodoIds.length) return res.send(400);
+    const { todoId, date, note } = req.body;
+    const isValid = todoId && date.length && note.length;
+    if (!isValid) return res.send(400);
 
-    await prisma.todos.updateMany({
+    await prisma.todos.update({
       data: {
-        is_archived: false,
+        note,
+        date,
       },
       where: {
-        id: {
-          in: archivedTodoIds,
-        },
+        id: Number(todoId),
       },
     });
+
     res.send(200);
   }
 }
