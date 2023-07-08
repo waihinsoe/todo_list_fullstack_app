@@ -8,7 +8,6 @@ import {
   Box,
   Button,
   Checkbox,
-  InputAdornment,
   Snackbar,
   TextField,
 } from "@mui/material";
@@ -55,6 +54,36 @@ const TodoItem = ({ todo, handleChange, expanded }: Props) => {
       fetchData();
     }
   };
+
+  const getValidDateFromat = () => {
+    if (!date) return;
+    const selectedDate = date.format("DD/MM/YYYY").split("/") as string[];
+    const currentDate = dayjs().format("DD/MM/YYYY").split("/") as string[];
+
+    if (
+      selectedDate[2] === currentDate[2] && //Years
+      selectedDate[1] === currentDate[1] // month
+    ) {
+      const selectedDay = Number(selectedDate[0]);
+      const currentDay = Number(currentDate[0]);
+      const isToday = selectedDay === currentDay;
+      const isTomorrow = selectedDay - currentDay === 1;
+      const isYesterday = currentDay - selectedDay === 1;
+
+      if (isToday) {
+        return <Typography>Today</Typography>;
+      } else if (isTomorrow) {
+        return <Typography>Tomorrow</Typography>;
+      } else if (isYesterday) {
+        return <Typography>Yesterday</Typography>;
+      } else {
+        return <Typography>{date.format("DD/MM/YYYY")}</Typography>;
+      }
+    } else {
+      return <Typography>{date.format("DD/MM/YYYY")}</Typography>;
+    }
+  };
+  getValidDateFromat();
 
   const handleClickCheckbox = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -133,9 +162,7 @@ const TodoItem = ({ todo, handleChange, expanded }: Props) => {
               {todo.title}
             </Typography>
           </Box>
-          <Box sx={{ mr: 1 }}>
-            <Typography>{date?.format("DD/MM/YYYY")}</Typography>
-          </Box>
+          <Box sx={{ mr: 1 }}>{getValidDateFromat()}</Box>
         </Box>
       </AccordionSummary>
       <AccordionDetails>
@@ -168,6 +195,7 @@ const TodoItem = ({ todo, handleChange, expanded }: Props) => {
                 open={open}
                 autoHideDuration={2000}
                 onClose={() => setOpen(false)}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
               >
                 <Alert
                   onClose={() => setOpen(false)}
