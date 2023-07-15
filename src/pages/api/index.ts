@@ -27,7 +27,7 @@ export default async function handler(
           image,
         },
       });
-
+      console.log("newUser :", newUser);
       return res.send({ user: newUser });
     } else {
       const userId = userFromDB.id;
