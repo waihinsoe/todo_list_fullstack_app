@@ -68,7 +68,11 @@ const Todos = () => {
               <InputAdornment position="start">
                 <Box
                   onClick={() => handleAddNewTodo()}
-                  sx={{ display: "grid", placeItems: "center" }}
+                  sx={{
+                    display: "grid",
+                    placeItems: "center",
+                    cursor: "pointer",
+                  }}
                 >
                   <AddIcon sx={{ color: "black" }} />
                 </Box>
