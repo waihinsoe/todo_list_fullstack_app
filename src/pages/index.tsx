@@ -16,7 +16,7 @@ export default function Home() {
   });
   return (
     <Layout title="todo list app">
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 2, px: 1 }}>
         <TodoList />
       </Box>
     </Layout>

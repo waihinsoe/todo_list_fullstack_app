@@ -41,7 +41,9 @@ const Todos = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+    <Box
+      sx={{ display: "flex", flexDirection: "column", gap: 1, width: "100%" }}
+    >
       {validTodos.length
         ? validTodos.map((todo) => {
             return (
@@ -50,11 +52,12 @@ const Todos = () => {
                 todo={todo}
                 expanded={expanded}
                 handleChange={handleChange}
+                setExpanded={setExpanded}
               />
             );
           })
         : ""}
-      <Box sx={{ width: 600, bgcolor: "white", mt: 3 }}>
+      <Box sx={{ width: "100%", bgcolor: "white", mt: 3 }}>
         <TextField
           fullWidth
           value={newTodoTitle}
@@ -63,7 +66,12 @@ const Todos = () => {
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <AddIcon sx={{ color: "black" }} />
+                <Box
+                  onClick={() => handleAddNewTodo()}
+                  sx={{ display: "grid", placeItems: "center" }}
+                >
+                  <AddIcon sx={{ color: "black" }} />
+                </Box>
               </InputAdornment>
             ),
           }}

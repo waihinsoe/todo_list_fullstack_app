@@ -25,9 +25,10 @@ interface Props {
     isExpanded: boolean,
     panel: number
   ) => void;
+  setExpanded: (value: number | false) => void;
 }
 
-const TodoItem = ({ todo, handleChange, expanded }: Props) => {
+const TodoItem = ({ todo, handleChange, expanded, setExpanded }: Props) => {
   const { user, fetchData } = useContext(AppContext);
   const [noteText, setNoteText] = useState(todo.note ? todo.note : "");
   const [date, setDate] = useState<Dayjs | null>(
@@ -93,7 +94,7 @@ const TodoItem = ({ todo, handleChange, expanded }: Props) => {
 
   const handleUpdate = async () => {
     const isValid = todo.id && date && noteText.length;
-    if (!isValid) return alert("need more info");
+    if (!isValid) return alert("need note and date");
     const response = await fetch(`${config.apiBaseUrl}/updateTodo`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -107,6 +108,7 @@ const TodoItem = ({ todo, handleChange, expanded }: Props) => {
     if (response.ok) {
       fetchData();
       setOpen(true);
+      setExpanded(false);
     }
   };
 
@@ -122,101 +124,113 @@ const TodoItem = ({ todo, handleChange, expanded }: Props) => {
   };
 
   return (
-    <Accordion
-      square
-      disableGutters
-      expanded={expanded === todo.id}
-      onChange={(event, isExpanded) => handleChange(event, isExpanded, todo.id)}
-    >
-      <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
-        aria-controls="panel1bh-content"
-        id="panel1bh-header"
-        sx={{ borderBottom: "1px solid #001c30" }}
+    <>
+      <Accordion
+        square
+        disableGutters
+        expanded={expanded === todo.id}
+        onChange={(event, isExpanded) =>
+          handleChange(event, isExpanded, todo.id)
+        }
       >
-        <Box
-          sx={{
-            width: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1bh-content"
+          id="panel1bh-header"
+          sx={{ borderBottom: "1px solid #001c30" }}
         >
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Checkbox
-              onClick={(evt) => {
-                {
-                  handleClickCheckbox(evt);
-                  handleDone(todo.id, !todo.is_done, !todo.is_lineThrough);
-                }
-              }}
-              checked={todo.is_lineThrough ? true : false}
-            />
-            <Typography
-              sx={{
-                textDecoration: `${
-                  todo.is_lineThrough ? "line-through" : "none"
-                }`,
-              }}
-            >
-              {todo.title}
-            </Typography>
-          </Box>
-          <Box sx={{ mr: 1 }}>{getValidDateFromat()}</Box>
-        </Box>
-      </AccordionSummary>
-      <AccordionDetails>
-        <Box sx={{ display: "flex", gap: 2 }}>
-          <TextField
-            id="note"
-            label="Note"
-            value={noteText}
-            onChange={(evt) => setNoteText(evt.target.value)}
-            multiline
-            rows={5}
-            sx={{ width: 300 }}
-            placeholder="Text here"
-            variant="filled"
-          />
           <Box
             sx={{
-              height: "148px",
+              width: "100%",
               display: "flex",
-              flexDirection: "column",
+              alignItems: "center",
               justifyContent: "space-between",
             }}
           >
-            <BasicDatePicker date={date} setDate={setDate} />
-            <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2 }}>
-              <Button variant="outlined" onClick={handleUpdate}>
-                update
-              </Button>
-              <Snackbar
-                open={open}
-                autoHideDuration={2000}
-                onClose={() => setOpen(false)}
-                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Checkbox
+                onClick={(evt) => {
+                  {
+                    handleClickCheckbox(evt);
+                    handleDone(todo.id, !todo.is_done, !todo.is_lineThrough);
+                  }
+                }}
+                checked={todo.is_lineThrough ? true : false}
+              />
+              <Typography
+                sx={{
+                  textDecoration: `${
+                    todo.is_lineThrough ? "line-through" : "none"
+                  }`,
+                }}
               >
-                <Alert
-                  onClose={() => setOpen(false)}
-                  severity="success"
-                  sx={{ width: "100%" }}
+                {todo.title}
+              </Typography>
+            </Box>
+            <Box sx={{ mr: 1 }}>{getValidDateFromat()}</Box>
+          </Box>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box sx={{ display: "flex", gap: 2 }}>
+            <TextField
+              id="note"
+              label="Note"
+              value={noteText}
+              onChange={(evt) => setNoteText(evt.target.value)}
+              multiline
+              rows={5}
+              sx={{ width: 300, minWidth: 200 }}
+              placeholder="Text here"
+              variant="filled"
+            />
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+              }}
+            >
+              <BasicDatePicker date={date} setDate={setDate} />
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  rowGap: 1,
+                  columnGap: 2,
+                  flexWrap: "wrap",
+                }}
+              >
+                <Button variant="outlined" onClick={handleUpdate}>
+                  update
+                </Button>
+
+                <Button
+                  variant="outlined"
+                  color="error"
+                  onClick={() => handleDelete(todo.id)}
                 >
-                  Update successfully completed!
-                </Alert>
-              </Snackbar>
-              <Button
-                variant="outlined"
-                color="error"
-                onClick={() => handleDelete(todo.id)}
-              >
-                delete
-              </Button>
+                  delete
+                </Button>
+              </Box>
             </Box>
           </Box>
-        </Box>
-      </AccordionDetails>
-    </Accordion>
+        </AccordionDetails>
+      </Accordion>
+      <Snackbar
+        open={open}
+        autoHideDuration={2500}
+        onClose={() => setOpen(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert
+          onClose={() => setOpen(false)}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Update successfully completed!
+        </Alert>
+      </Snackbar>
+    </>
   );
 };
 

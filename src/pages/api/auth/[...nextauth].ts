@@ -1,18 +1,12 @@
 import { config } from "@/config";
 import NextAuth from "next-auth";
-import GithubProvider from "next-auth/providers/github";
-import DiscordProvider from "next-auth/providers/discord";
-
+import GoogleProvider from "next-auth/providers/google";
 export const authOptions = {
   // Configure one or more authentication providers
   providers: [
-    GithubProvider({
-      clientId: config.githubClientId,
-      clientSecret: config.githubClientSecret,
-    }),
-    DiscordProvider({
-      clientId: config.discordClientId,
-      clientSecret: config.discordClientSecret,
+    GoogleProvider({
+      clientId: config.googleClientId,
+      clientSecret: config.googleClientSecret,
     }),
     // ...add more providers here
   ],

@@ -36,13 +36,11 @@ const AppProvider = ({ children }: Props) => {
       fetchData();
     }
   }, [session]);
-  console.log("data :", data);
   const fetchData = async () => {
     updateData({ ...data, isLoading: true });
     const response = await fetch(`${config.apiBaseUrl}`);
     if (response.ok) {
       const responseJson = await response.json();
-      console.log("responseJson :", responseJson);
       updateData({ ...data, ...responseJson, isLoading: false });
     }
   };
