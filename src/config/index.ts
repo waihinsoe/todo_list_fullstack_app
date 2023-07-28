@@ -1,15 +1,11 @@
 interface Config {
   apiBaseUrl: string;
-  githubClientId: string;
-  githubClientSecret: string;
-  discordClientId: string;
-  discordClientSecret: string;
+  googleClientId: string;
+  googleClientSecret: string;
 }
 
 export const config: Config = {
   apiBaseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || "",
-  githubClientId: process.env.GITHUB_ID || "",
-  githubClientSecret: process.env.GITHUB_SECRET || "",
-  discordClientId: process.env.DISCORD_CLIENT_ID || "",
-  discordClientSecret: process.env.DISCORD_CLIENT_SECRET || "",
+  googleClientId: process.env.GOOGLE_CLIENT_ID || "",
+  googleClientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
 };

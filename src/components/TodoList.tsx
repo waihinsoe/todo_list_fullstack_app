@@ -4,7 +4,12 @@ import Todos from "./Todos";
 import DoneBar from "./DoneBar";
 const TodoList = () => {
   return (
-    <Box sx={{ maxWidth: 600, mb: 10 }}>
+    <Box
+      sx={{
+        width: { xs: "100%", sm: "600px" },
+        mb: 10,
+      }}
+    >
       <Todos />
       <DoneBar />
     </Box>

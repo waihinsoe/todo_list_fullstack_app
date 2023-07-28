@@ -7,7 +7,6 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === "GET") {
-    console.log("Hello");
     const session = await getSession({ req });
     if (!session) return res.status(400);
     const user = session.user;
@@ -28,7 +27,6 @@ export default async function handler(
           image,
         },
       });
-      console.log("newUser :", newUser);
       return res.send({ user: newUser });
     } else {
       const userId = userFromDB.id;
