@@ -61,6 +61,7 @@ const Todos = () => {
         <TextField
           fullWidth
           value={newTodoTitle}
+          placeholder="Enter your todos"
           onChange={(evt) => setNewTodoTitle(evt.target.value)}
           onKeyUp={(evt) => evt.key === "Enter" && handleAddNewTodo()}
           InputProps={{
